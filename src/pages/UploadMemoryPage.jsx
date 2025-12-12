@@ -1,101 +1,133 @@
-import { useState } from "react";
+// File: src/pages/UploadMemoryPage.jsx
+import React, { useState } from "react";
 import { uploadMemory } from "../utils/uploadMemory";
 
 export default function UploadMemoryPage() {
   const [title, setTitle] = useState("");
-  const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("");
-  const [style, setStyle] = useState("square");
-  const [files, setFiles] = useState([]);
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("Kegiatan");
+  const [style, setStyle] = useState("Full Width");
+  const [file, setFile] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
-  async function handleUpload() {
-    if (!files.length) {
-      alert("Pilih file dulu!");
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!file) {
+      alert("Pilih gambar terlebih dahulu!");
       return;
     }
 
     setLoading(true);
 
-    const selectedFile = files[0];
-    const result = await uploadMemory(selectedFile);
+    const result = await uploadMemory({
+      file,
+      title,
+      description,
+      category,
+      style,
+    });
 
     setLoading(false);
 
-    if (result.error) {
-      console.error(result.error);
-      alert("Gagal upload gambar");
+    if (!result.success) {
+      alert("Upload gagal: " + result.error);
       return;
     }
 
-    console.log("URL Foto:", result.url);
-
     alert("Upload Berhasil!");
+
+    // Reset form
+    setTitle("");
+    setDescription("");
+    setCategory("Kegiatan");
+    setStyle("Full Width");
+    setFile(null);
+
+    // Kalau nanti mau redirect:
+    // window.location.href = "/memori";
   }
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-4">Upload Memory</h1>
+    <div className="p-8 max-w-xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Upload Memori Baru</h1>
 
-      {/* TITLE */}
-      <label className="font-semibold">Judul Memory</label>
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full border p-2 mb-4 rounded"
-        placeholder="Judul foto..."
-      />
+      <form onSubmit={handleSubmit} className="space-y-5">
 
-      {/* DESCRIPTION */}
-      <label className="font-semibold">Deskripsi</label>
-      <textarea
-        value={desc}
-        onChange={(e) => setDesc(e.target.value)}
-        className="w-full border p-2 mb-4 rounded"
-        placeholder="Deskripsi foto..."
-      />
+        {/* Judul */}
+        <div>
+          <label className="font-semibold">Judul</label>
+          <input
+            className="border p-2 w-full rounded"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Masukkan judul (opsional)"
+          />
+        </div>
 
-      {/* CATEGORY */}
-      <label className="font-semibold">Kategori</label>
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="w-full border p-2 mb-4 rounded"
-      >
-        <option value="">Pilih kategori</option>
-        <option value="kegiatan">Kegiatan</option>
-        <option value="kelas">Kelas</option>
-        <option value="acara">Acara</option>
-      </select>
+        {/* Deskripsi */}
+        <div>
+          <label className="font-semibold">Deskripsi</label>
+          <textarea
+            className="border p-2 w-full rounded"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Masukkan deskripsi (opsional)"
+          />
+        </div>
 
-      {/* STYLE */}
-      <label className="font-semibold">Style Foto</label>
-      <select
-        value={style}
-        onChange={(e) => setStyle(e.target.value)}
-        className="w-full border p-2 mb-4 rounded"
-      >
-        <option value="square">Square</option>
-        <option value="full">Full Width</option>
-        <option value="portrait">Portrait</option>
-      </select>
+        {/* Kategori */}
+        <div>
+          <label className="font-semibold">Kategori</label>
+          <select
+            className="border p-2 w-full rounded"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="Kegiatan">Kegiatan</option>
+            <option value="Lomba">Lomba</option>
+            <option value="Acara">Acara</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
 
-      {/* FILE UPLOAD */}
-      <label className="font-semibold mt-4 block">Pilih Foto</label>
-      <input
-        type="file"
-        onChange={(e) => setFiles(e.target.files)}
-        className="w-full mb-4"
-      />
+        {/* Style Foto */}
+        <div>
+          <label className="font-semibold">Style Foto</label>
+          <select
+            className="border p-2 w-full rounded"
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+          >
+            <option value="Full Width">Full Width</option>
+            <option value="Square">Square</option>
+            <option value="Landscape">Landscape</option>
+          </select>
+        </div>
 
-      {/* BUTTON */}
-      <button
-        onClick={handleUpload}
-        disabled={loading}
-        className="w-full bg-blue-600 text-white p-3 rounded mt-2"
-      >
-        {loading ? "Mengupload..." : "Upload Memory"}
-      </button>
+        {/* Upload File */}
+        <div>
+          <label className="font-semibold">Pilih Foto</label>
+          <input
+            type="file"
+            className="border p-2 w-full rounded"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </div>
+
+        {/* Tombol Submit */}
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-3 text-white rounded ${
+            loading ? "bg-gray-500" : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {loading ? "Mengupload..." : "Upload Memori"}
+        </button>
+      </form>
     </div>
   );
 }

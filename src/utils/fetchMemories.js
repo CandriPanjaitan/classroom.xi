@@ -1,11 +1,8 @@
-import supabase from "../supabase/client";
+import supabase from "../utils/supabaseClient";
 
 export async function fetchMemories() {
   try {
-    const { data, error } = await supabase
-      .from("memories")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.from("memories").select("*");
 
     if (error) {
       console.error("Fetch Memories Error:", error);

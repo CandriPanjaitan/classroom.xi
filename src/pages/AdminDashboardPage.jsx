@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabase/client';
+import supabase from "../utils/supabaseClient";
 
 const AdminDashboardPage = () => {
     const navigate = useNavigate();

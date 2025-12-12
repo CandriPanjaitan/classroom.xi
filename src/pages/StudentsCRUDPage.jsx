@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supabase } from "../supabase/client";
+import supabase from "../utils/supabaseClient";
 import { useForm } from "react-hook-form";
 import { v4 } from "uuid";
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { supabase } from '../supabase/client';
+import supabase from "../utils/supabaseClient";
 import { useNavigate } from 'react-router-dom';
 
 const AdminLoginPage = () => {

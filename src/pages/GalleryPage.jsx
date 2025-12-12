@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import supabase from "../supabase/client";
+import supabase from "../utils/supabaseClient";
 
 
 export default function GalleryPage() {

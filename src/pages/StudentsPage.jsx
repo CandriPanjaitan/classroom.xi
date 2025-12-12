@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabase/client'; // Pastikan path ini benar!
+import supabase from "../utils/supabaseClient";
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);

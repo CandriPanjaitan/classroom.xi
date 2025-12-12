@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "../supabase/client";
+import supabase from "../utils/supabaseClient";
 import { Link } from "react-router-dom";
 
 export default function MemoriesCRUDPage() {
